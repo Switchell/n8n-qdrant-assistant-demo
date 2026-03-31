@@ -1,5 +1,5 @@
 {
-  "name": "Bot Showcase - Memory Demo (Webhook + Qdrant)",
+  "name": "SonBot — Memory Demo (Webhook + Qdrant)",
   "nodes": [
     {
       "parameters": {

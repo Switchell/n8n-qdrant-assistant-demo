@@ -1,9 +1,9 @@
-# Bot Demo Checklist
+# SonBot — демо-чеклист
 
 ## 1) Поднять сервисы
 
 ```powershell
-cd "C:\Users\Son\Desktop\Кодинг проекты\Bot\scripts"
+cd "<путь-к-репозиторию-SonBot>\scripts"
 .\up.ps1
 .\health.ps1
 ```
@@ -43,7 +43,7 @@ Invoke-RestMethod -Method Get -Uri "http://localhost:6333/collections"
 ## 5) Assistant Chat (LLM)
 
 1. Импортировать `workflows/assistant_chat_llm.workflow.json` (или обновить существующий workflow из файла).
-2. Убедиться, что в `.env` заданы `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_MODEL`, контейнер n8n перезапущен после изменения env (`.\down.ps1` / `.\up.ps1` или `docker compose up -d` из корня `Bot`).
+2. Убедиться, что в `.env` заданы `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_MODEL`, контейнер n8n перезапущен после изменения env (`.\down.ps1` / `.\up.ps1` или `docker compose up -d` из корня репозитория).
 3. Активировать workflow в UI n8n.
 
 **Тест вебхука** (путь: `assistant-chat-v1`):

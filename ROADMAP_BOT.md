@@ -1,4 +1,4 @@
-# Roadmap: Bot -> Freelance Product
+# Roadmap: SonBot → продукт для фриланса
 
 ## Текущая проблема
 

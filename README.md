@@ -1,23 +1,25 @@
-# Bot (n8n + Qdrant)
+# SonBot (n8n + Qdrant)
 
-Локальный проект для запуска n8n и Qdrant в отдельном Docker compose-неймспейсе.
+Локальный проект **SonBot** для запуска n8n и Qdrant в отдельном Docker Compose‑неймспейсе.
 
 ## Что поднимается
 
 - `n8n` на `http://localhost:5678`
 - `qdrant` на `http://localhost:6333`
 
-Compose project name: `bot_showcase` (изолирован от других Docker-проектов).
+Compose project name: `sonbot` (изолирован от других Docker-проектов).
+
+Если раньше проект поднимался как `bot_showcase`, Docker создаст **новые** тома для `sonbot`; данные из старых томов не подтянутся автоматически. Либо переименуй проект обратно в compose, либо перенеси данные вручную при необходимости.
 
 ## Подготовка
 
 1. Убедись, что Docker Desktop запущен.
-2. Проверь наличие `google-creds.json` в корне `Bot`.
+2. Проверь наличие `google-creds.json` в корне репозитория SonBot.
 3. Проверь `.env` (пример в `.env.example`).
 
 ## Быстрый запуск
 
-Из папки `Bot\scripts`:
+Из папки `scripts` в корне репозитория:
 
 ```powershell
 .\up.ps1

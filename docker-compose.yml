@@ -1,4 +1,4 @@
-name: bot_showcase
+name: sonbot
 
 services:
   qdrant:

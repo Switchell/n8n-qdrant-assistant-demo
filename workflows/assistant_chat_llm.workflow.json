@@ -1,5 +1,5 @@
 {
-  "name": "Bot Showcase - Assistant Chat (Webhook + LLM + Qdrant)",
+  "name": "SonBot — Assistant Chat (Webhook + LLM)",
   "nodes": [
     {
       "parameters": {
