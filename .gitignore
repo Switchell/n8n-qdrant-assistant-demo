@@ -1,0 +1,6 @@
+.env
+google-creds.json
+*.log
+data/
+workflows/_*.json
+workflows/*for_active*.json

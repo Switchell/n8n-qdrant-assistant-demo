@@ -1,0 +1,222 @@
+{
+  "name": "Bot Showcase - Memory Demo (Webhook + Qdrant)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bot-memory-demo",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "84b18b37-084d-4b00-826c-3f29266f2f84",
+      "id": "Webhook_1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        160,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "message",
+              "value": "={{$json.body?.message || $json.message || 'Hello from demo'}}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{$json.body?.user_id || $json.user_id || 'demo-user'}}"
+            },
+            {
+              "name": "point_id",
+              "value": "={{$now.toMillis()}}"
+            }
+          ],
+          "number": [
+            {
+              "name": "v1",
+              "value": "={{($json.body?.message || $json.message || 'x').length}}"
+            },
+            {
+              "name": "v2",
+              "value": "={{Math.floor((($json.body?.message || $json.message || 'x').length) / 2)}}"
+            },
+            {
+              "name": "v3",
+              "value": "={{($json.body?.user_id || $json.user_id || 'demo-user').length}}"
+            },
+            {
+              "name": "v4",
+              "value": "={{($json.body?.message || $json.message || 'x').split(' ').length}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "Set_1",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        380,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const v = [Number($json.v1), Number($json.v2), Number($json.v3), Number($json.v4)];\nconst upsertBody = {\n  points: [\n    {\n      id: Number($json.point_id),\n      vector: v,\n      payload: {\n        user_id: $json.user_id,\n        message: $json.message,\n        created_at: new Date().toISOString(),\n      },\n    },\n  ],\n};\n\nreturn [{json: {...$json, upsertBody, upsertBodyString: JSON.stringify(upsertBody)}}];"
+      },
+      "id": "Fn_1",
+      "name": "Build Upsert Body",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        640,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "http://qdrant:6333/collections/bot_memory/points?wait=true",
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.upsertBodyString}}"
+      },
+      "id": "HTTP_2",
+      "name": "Upsert Memory",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        890,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://qdrant:6333/collections/bot_memory/points/scroll",
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"limit\":3,\"with_payload\":true,\"with_vector\":false}"
+      },
+      "id": "HTTP_3",
+      "name": "Read Recent Memory",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1130,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const points = $json.result?.points || [];\nconst src = $items('Build Upsert Body', 0, 0)?.[0]?.json || {};\n\nconst latest = {\n  user_id: src.user_id || null,\n  message: src.message || null,\n  created_at: new Date().toISOString(),\n};\n\nreturn [{\n  json: {\n    status: 'ok',\n    collection: 'bot_memory',\n    points_returned: points.length,\n    latest_payload: latest,\n  },\n}];"
+      },
+      "id": "Fn_2",
+      "name": "Build Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1370,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {}
+      },
+      "id": "Respond_1",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Build Upsert Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Upsert Body": {
+      "main": [
+        [
+          {
+            "node": "Upsert Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert Memory": {
+      "main": [
+        [
+          {
+            "node": "Read Recent Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Recent Memory": {
+      "main": [
+        [
+          {
+            "node": "Build Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "active": false,
+  "versionId": "3",
+  "id": "bot_memory_demo"
+}
