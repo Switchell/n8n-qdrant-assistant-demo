@@ -12,25 +12,25 @@ cd "<путь-к-репозиторию-SonBot>\scripts"
 
 1. Открыть `http://localhost:5678`
 2. `Workflows` -> `Import from file`
-3. Выбрать `workflows/bot_memory_demo.workflow.json`
+3. Выбрать `workflows/assistant_chat_llm.workflow.json`
 4. Сохранить и активировать workflow
 
 ## 3) Прогнать тест вебхука
 
-У workflow путь: `bot-memory-demo`  
+У workflow путь: `assistant-chat-v1`  
 Тест-запрос:
 
 ```powershell
 Invoke-RestMethod -Method Post `
-  -Uri "http://localhost:5678/webhook/bot-memory-demo" `
+  -Uri "http://localhost:5678/webhook/assistant-chat-v1" `
   -ContentType "application/json" `
-  -Body (Get-Content "..\samples\webhook_request.json" -Raw)
+  -Body '{"user_id":"u-demo","message":"Скажи одним предложением, что умеет n8n."}'
 ```
 
 Ожидаемый ответ:
 - `status: "ok"`
-- `stored_point_id` заполнен
-- `similar_found` > 0
+- `assistant_reply` заполнен
+- `memory_upsert_ok` есть в ответе
 
 ## 4) Проверка Qdrant
 
@@ -64,4 +64,4 @@ Invoke-RestMethod -Method Post `
 
 - Скрин: активный workflow «SonBot — Assistant Chat» в списке n8n.
 - Скрин **ответа** тестового `Invoke-RestMethod` / Postman с полем `assistant_reply` или короткое видео **Executions**.
-- При необходимости — отдельно демо **bot-memory-demo** и список коллекций Qdrant (`bot_memory`).
+- Дополнительно — список коллекций Qdrant (`bot_memory`).

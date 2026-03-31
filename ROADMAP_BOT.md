@@ -3,7 +3,7 @@
 ## Текущая проблема
 
 Сейчас бот технически рабочий; продуктовая полировка продолжается:
-- есть приём webhook и запись памяти в Qdrant (`bot_memory_demo`);
+- есть приём webhook и запись памяти в Qdrant (`bot_memory`);
 - есть витринный workflow **Assistant Chat**: `POST /webhook/assistant-chat-v1` → Qdrant search → LLM → upsert → **JSON в ответе вебхука** (см. README);
 - упаковка для Kwork: `KWORK_OFFERING.md`, чеклист в `DEMO_CHECKLIST.md`.
 
@@ -21,10 +21,10 @@
 ### Этап 1 (сейчас)
 - [x] Workflow `assistant-chat-v1` (Webhook + LLM), файл `assistant_chat_llm.workflow.json`
 - [x] OpenAI-compatible API через `.env`
-- [x] e2e: вебхук + проверка **Executions**; память — отдельным workflow `bot_memory_demo`
+- [x] e2e: вебхук + проверка **Executions** в основном assistant workflow
 
 ### Этап 2
-- [x] Memory retrieval: Qdrant `points/search` по тому же латентному «вектору», что и в `bot_memory_demo`, фильтр `user_id`
+- [x] Memory retrieval: Qdrant `points/search` с фильтром `user_id`
 - [x] Промпт с блоком памяти в system message
 - [x] Поля ответа: `used_memory_count`, `model`, `latency_ms`, `memory_upsert_ok`
 
@@ -35,7 +35,7 @@
 
 ## Критерий готовности
 
-**Текущая витрина:** один ассистентский workflow с LLM + Qdrant в одной цепочке; синхронный JSON из **Respond to Webhook**; отдельный `bot-memory-demo` по желанию для чистой демонстрации только памяти.
+**Текущая витрина:** один ассистентский workflow с LLM + Qdrant в одной цепочке; синхронный JSON из **Respond to Webhook**.
 
 **Дальше (этап 3 и идеи):**
 - Telegram и другие каналы;

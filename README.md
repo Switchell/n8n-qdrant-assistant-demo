@@ -53,11 +53,10 @@ Compose project name: `sonbot` (изолирован от других Docker-п
 .\restore-workflows.ps1
 ```
 
-Скрипт делает `git pull`, копирует JSON в контейнер `sonbot-n8n-*`, импортирует через `n8n import:workflow`, включает оба workflow и перезапускает n8n.
+Скрипт делает `git pull`, копирует JSON в контейнер `sonbot-n8n-*`, импортирует основной workflow и перезапускает n8n.
 
 ## Demo workflow (для витрины)
 
-- Workflow JSON: `workflows/bot_memory_demo.workflow.json`
 - LLM workflow JSON: `workflows/assistant_chat_llm.workflow.json`
 - Пример запроса: `samples/webhook_request.json`
 - Пошаговая проверка: `DEMO_CHECKLIST.md`
@@ -66,7 +65,7 @@ Compose project name: `sonbot` (изолирован от других Docker-п
 
 Файл: `workflows/assistant_chat_llm.workflow.json`
 
-Цепочка: **вебхук → нормализация → поиск в Qdrant (`bot_memory`) → LLM с контекстом из памяти → запись диалога в Qdrant → JSON-ответ** (режим `Respond to Webhook`, как в `bot_memory_demo`).
+Цепочка: **вебхук → нормализация → поиск в Qdrant (`bot_memory`) → LLM с контекстом из памяти → запись диалога в Qdrant → JSON-ответ** (режим `Respond to Webhook`).
 
 | Шаг | Назначение |
 |-----|------------|
@@ -82,7 +81,7 @@ Compose project name: `sonbot` (изолирован от других Docker-п
 
 **Ответ в том же HTTP-запросе** (пример полей): `status`, `assistant_reply`, `model`, `used_memory_count`, `latency_ms`, `memory_upsert_ok`.
 
-Перед первым запуском ассистента коллекция **`bot_memory`** должна существовать: один раз прогони `bot_memory_demo` или создай коллекцию вручную в Qdrant. Если поиск по коллекции недоступен, нода поиска помечена `continueOnFail` — ответ всё равно соберётся, но память будет пустой.
+Перед первым запуском ассистента коллекция **`bot_memory`** должна существовать (создай вручную в Qdrant). Если поиск по коллекции недоступен, нода поиска помечена `continueOnFail` — ответ всё равно соберётся, но память будет пустой.
 
 Отладка: **Executions** в n8n — цепочка нод от **Webhook Trigger** до **Build API Response**.
 
