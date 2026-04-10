@@ -1,2 +1,6 @@
-# Treat helper scripts as vendored so linguist highlights workflows / compose
+# Карточка репозитория: workflow JSON + YAML compose, без перекрытия PowerShell-скриптами
 scripts/** linguist-vendored
+workflows/*.json linguist-language=JSON
+docker-compose.yml linguist-language=YAML
+Dockerfile linguist-language=Dockerfile
+*.md linguist-documentation
