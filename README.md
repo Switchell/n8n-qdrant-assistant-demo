@@ -9,6 +9,20 @@
 [![Qdrant](https://img.shields.io/badge/vectors-Qdrant-DC244C)](https://qdrant.tech/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
+## Кому подойдёт / не подойдёт
+
+| Подойдёт | Не подойдёт |
+|----------|-------------|
+| **Демо** цепочки: вебхук → LLM → **векторная память** (Qdrant) в **n8n** | Готовый SaaS-чат для конечных пользователей без настройки |
+| Обучение / **форк** под свой сценарий и API-ключи | Продакшен без своих политик **ПДн** и квот API |
+| Кто ок с **Docker** и (на Windows) **PowerShell** | Только Linux-скрипты без адаптации |
+
+## Три шага до первого результата
+
+1. `.env` из `.env.example` + файл **`google-creds.json`** в корне (или заглушка `{}` для подъёма без Google-нод).  
+2. Из **`scripts`**: `.\up.ps1` → n8n **:5678**, Qdrant **:6333**.  
+3. Создать коллекцию **`bot_memory`** в Qdrant → `.\restore-workflows.ps1` или импорт `workflows/*.json` → тестовый POST по [DEMO_CHECKLIST.md](DEMO_CHECKLIST.md).
+
 ## Что внутри
 
 Цепочка **вебхук → нормализация входа → поиск в Qdrant (`bot_memory`) → LLM с контекстом → запись диалога в Qdrant → JSON‑ответ** (режим *Respond to Webhook* в n8n).
